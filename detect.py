@@ -22,6 +22,7 @@ from utils.general import (LOGGER, check_file, check_img_size, check_imshow, che
                            increment_path, non_max_suppression, print_args, scale_coords, strip_optimizer, xyxy2xywh)
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
+from utils.gendern import gender_detector
 
 
 @torch.no_grad()
@@ -30,9 +31,10 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         conf_thres=0.25,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
         ):
-    gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
+
     source = str(source)
     webcam = source.isnumeric()
+    genderer = gender_detector(Path.cwd())
 
     # Load model
     device = select_device("")
@@ -74,11 +76,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
 
                     crop_img = im0[int(xyxy[1]):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
-                    detected_face = cv2.resize(crop_img, (224, 224)) #img shape is (224, 224, 3) now
-                    img_blob = cv2.dnn.blobFromImage(detected_face) # img_blob shape is (1, 3, 224, 224)
-                    gender_model.setInput(img_blob)
-                    gender_class = gender_model.forward()[0]
-                    gender = 'Woman ' if np.argmax(gender_class) == 0 else 'Man'
+                    gender = genderer.detect_gender(crop_img)
                     label = f' {conf:.2f} {gender}'
                     annotator.box_label(xyxy, label, color=colors(0, True))
 
