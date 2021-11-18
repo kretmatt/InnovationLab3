@@ -41,18 +41,15 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt and not jit)
 
     # Run inference
-    for path, im, im0s, vid_cap, s in dataset:
-        t1 = time_sync()
+    for path, im, im0s in dataset:
         im = torch.from_numpy(im).to(device)
         im = im.float()  # uint8 to fp16/32
         im /= 255  # 0 - 255 to 0.0 - 1.0
         if len(im.shape) == 3:
             im = im[None]  # expand for batch dim
-        t2 = time_sync()
 
         # Inference
         pred = model(im, augment=False, visualize=False)
-        t3 = time_sync()
 
         # NMS
         pred = non_max_suppression(pred, conf_thres, iou_thres, max_det=1000)
@@ -61,12 +58,10 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         for i, det in enumerate(pred):  # per image
             if webcam:  # batch_size >= 1
                 p, im0, frame = path[i], im0s[i].copy(), dataset.count
-                s += f'{i}: '
             else:
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
             p = Path(p)  # to Path
-            s += '%gx%g ' % im.shape[2:]  # print string
             annotator = Annotator(im0, line_width=3, example=str(names))
             if len(det):
                 # Rescale boxes from img_size to im0 size
@@ -75,7 +70,6 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 # Print results
                 for c in det[:, -1].unique():
                     n = (det[:, -1] == c).sum()  # detections per class
-                    s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
@@ -86,9 +80,6 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     label = f'{names[c]} {conf:.2f}'
                     label = label + "Test"
                     annotator.box_label(xyxy, label, color=colors(c, True))
-
-            # Print time (inference-only)
-            LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
 
             # Stream results
             im0 = annotator.result()
