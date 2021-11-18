@@ -1,3 +1,3 @@
 # InnovationLab3
 
-test
+put the [pre trained gender detection model](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/static/gender.caffemodel) in your root.
