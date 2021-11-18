@@ -70,7 +70,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
                     #add text to label to display result
 
-                    label = f'{names[c]} {conf:.2f}'
+                    label = f' {conf:.2f}'
                     #label = label + "Test"
                     annotator.box_label(xyxy, label, color=colors(0, True))
 
