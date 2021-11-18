@@ -56,30 +56,23 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
         # Process predictions
         for i, det in enumerate(pred):  # per image
-            if webcam:  # batch_size >= 1
-                p, im0, frame = path[i], im0s[i].copy(), dataset.count
-            else:
-                p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
+            p, im0, frame = path[i], im0s[i].copy(), dataset.count
 
             p = Path(p)  # to Path
             annotator = Annotator(im0, line_width=3, example=str(names))
-            if len(det):
+            if len(det): #check if detection is not empty
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
 
-                # Print results
-                for c in det[:, -1].unique():
-                    n = (det[:, -1] == c).sum()  # detections per class
-
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    c = int(cls)  # integer class
+                    #c = int(cls)  # integer class
 
                     #add text to label to display result
 
                     label = f'{names[c]} {conf:.2f}'
-                    label = label + "Test"
-                    annotator.box_label(xyxy, label, color=colors(c, True))
+                    #label = label + "Test"
+                    annotator.box_label(xyxy, label, color=colors(0, True))
 
             # Stream results
             im0 = annotator.result()
