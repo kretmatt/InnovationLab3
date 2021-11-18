@@ -4,8 +4,10 @@ import os
 import sys
 from pathlib import Path
 
+
 import cv2
 import torch
+import numpy as np
 import torch.backends.cudnn as cudnn
 
 FILE = Path(__file__).resolve()
@@ -28,6 +30,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         conf_thres=0.25,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
         ):
+    gender_model = cv2.dnn.readNetFromCaffe("gender.prototxt", "gender.caffemodel")
     source = str(source)
     webcam = source.isnumeric()
 
@@ -67,15 +70,16 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
 
-                    #c = int(cls)  # integer class
-
                     #add text to label to display result
 
-                    label = f' {conf:.2f}'
-                    #label = label + "Test"
-                    #p1, p2 = (int(xyxy[0]), int(xyxy[1])), (int(xyxy[2]), int(xyxy[3]))
+
                     crop_img = im0[int(xyxy[1]):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
-                    cv2.imshow('teset',crop_img)
+                    detected_face = cv2.resize(crop_img, (224, 224)) #img shape is (224, 224, 3) now
+                    img_blob = cv2.dnn.blobFromImage(detected_face) # img_blob shape is (1, 3, 224, 224)
+                    gender_model.setInput(img_blob)
+                    gender_class = gender_model.forward()[0]
+                    gender = 'Woman ' if np.argmax(gender_class) == 0 else 'Man'
+                    label = f' {conf:.2f} {gender}'
                     annotator.box_label(xyxy, label, color=colors(0, True))
 
             # Stream results
