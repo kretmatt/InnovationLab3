@@ -298,6 +298,7 @@ class LoadStreams:
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         self.fps[0] = max(cap.get(cv2.CAP_PROP_FPS) % 100, 0) or 30.0  # 30 FPS fallback
         self.frames[0] = max(int(cap.get(cv2.CAP_PROP_FRAME_COUNT)), 0) or float('inf')
+        _, self.imgs[0] = cap.read()
         self.threads[0] = Thread(target=self.update, args=([0, cap, s]), daemon=True)
         self.threads[0].start()
 
@@ -306,8 +307,6 @@ class LoadStreams:
         # check for common shapes
         s = np.stack([letterbox(x, self.img_size, stride=self.stride, auto=self.auto)[0].shape for x in self.imgs])
         self.rect = np.unique(s, axis=0).shape[0] == 1  # rect inference if all shapes equal
-        if not self.rect:
-            LOGGER.warning('WARNING: Stream shapes differ. For optimal performance supply similarly-shaped streams.')
 
     def update(self, i, cap, stream):
         # Read stream `i` frames in daemon thread
