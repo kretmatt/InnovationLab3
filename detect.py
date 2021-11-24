@@ -72,8 +72,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)]
-                    #gender = genderer.detect_gender(crop_img)
+                    crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)] # Almost no impact on FPS counter
+                    #gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
                     fps = 1/(time.time()-start_time)
                     #add text to label to display result
                     label = f' {conf:.2f}  {round(fps,2)}'
