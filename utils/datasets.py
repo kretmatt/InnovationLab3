@@ -309,10 +309,16 @@ class LoadStreams:
         self.rect = np.unique(s, axis=0).shape[0] == 1  # rect inference if all shapes equal
 
     def update(self, i, cap, stream):
+
         # Read stream `i` frames in daemon thread
         n, f, read = 0, self.frames[i], 1  # frame number, frame array, inference every 'read' frame
         #self.prev_frame_time = time.time()-1
         while cap.isOpened() and n < f:
+            if cv2.waitKey(1) == ord('q'):  # q to quit
+                cv2.destroyAllWindows()
+                cap.release()
+                raise SystemExit
+
             n += 1
             # _, self.imgs[index] = cap.read()
 
@@ -337,9 +343,7 @@ class LoadStreams:
 
     def __next__(self):
         self.count += 1
-        if not all(x.is_alive() for x in self.threads) or cv2.waitKey(1) == ord('q'):  # q to quit
-            cv2.destroyAllWindows()
-            raise StopIteration
+
 
         # Letterbox
         img0 = self.imgs.copy()
