@@ -37,6 +37,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
         conf_thres=0.25,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
+        gen_det=False,
+        age_det=False,
         ):
 
     source = str(source)
@@ -78,12 +80,19 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)] # Almost no impact on FPS counter
-                    gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
-                    fps = 1/(time.time()-start_time)
                     #add text to label to display result
-                    label = f' {conf:.2f}  {round(fps,2)}'
-                    label += f'{gender}'
+                    label = f'Conf:{conf:.2f} '
+
+                    if(age_det is True or gen_det is True):
+                        crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)] # Almost no impact on FPS counter
+                        if(age_det is True):
+                            continue
+                        #put age detection call here
+                        if(gen_det is True):
+                            gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
+                            label += f' {gender} '
+                    fps = 1/(time.time()-start_time)
+                    label += f'FPS: {round(fps,2)}'
                     annotator.box_label(xyxy, label, color=colors(0, True))
 
             # Stream results
@@ -99,6 +108,8 @@ def parse_opt():
     parser.add_argument('--source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
+    parser.add_argument('--gen-det', type=bool, default=False, help='gender detection, default false')
+    parser.add_argument('--age-det', type=bool, default=False, help='age detection, default false')
     opt = parser.parse_args()
     #opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(FILE.stem, opt)
