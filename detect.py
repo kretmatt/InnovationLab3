@@ -9,13 +9,11 @@ import argparse
 import os
 import sys
 import time
-from pathlib import Path
-
-
 import cv2
 import torch
 import numpy as np
 import torch.backends.cudnn as cudnn
+from pathlib import Path
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -86,15 +84,14 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     if(age_det is True or gen_det is True):
                         crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)] # Almost no impact on FPS counter
                         if(age_det is True):
+                            #put age detection call here
                             continue
-                        #put age detection call here
                         if(gen_det is True):
                             gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
                             label += f' {gender} '
                     fps = 1/(time.time()-start_time)
                     label += f'FPS: {round(fps,2)}'
                     annotator.box_label(xyxy, label, color=colors(0, True))
-
             # Stream results
             im0 = annotator.result()
             #if view_img:
