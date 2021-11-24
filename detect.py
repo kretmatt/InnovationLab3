@@ -71,13 +71,11 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-
-                    #add text to label to display result
-
-
                     crop_img = im0[int(xyxy[1]):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
-                    gender = genderer.detect_gender(crop_img)
-                    label = f' {conf:.2f} {gender}'
+                    #gender = genderer.detect_gender(crop_img)
+                    #add text to label to display result
+                    label = f' {conf:.2f}  {dataset.fps}'
+                    #label += {gender}
                     annotator.box_label(xyxy, label, color=colors(0, True))
 
             # Stream results

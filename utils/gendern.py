@@ -11,4 +11,4 @@ class gender_detector:
         self.gender_model.setInput(img_blob)
         gender_class = self.gender_model.forward()[0]
         gender = 'Woman ' if np.argmax(gender_class) == 0 else 'Man'
-        return gender
+        return 'Woman'

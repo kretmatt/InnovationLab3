@@ -296,7 +296,7 @@ class LoadStreams:
         assert cap.isOpened(), f'{st}Failed to open {s}'
         w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        self.fps[0] = max(cap.get(cv2.CAP_PROP_FPS) % 100, 0) or 30.0  # 30 FPS fallback
+        self.fps[0] = max(cap.get(cv2.CAP_PROP_FPS) % 100, 0) #or 30.0  # 30 FPS fallback
         self.frames[0] = max(int(cap.get(cv2.CAP_PROP_FRAME_COUNT)), 0) or float('inf')
         _, self.imgs[0] = cap.read()
         self.threads[0] = Thread(target=self.update, args=([0, cap, s]), daemon=True)
