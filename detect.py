@@ -39,6 +39,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         iou_thres=0.45,  # NMS IOU threshold
         gen_det=False,
         age_det=False,
+        device="",
         ):
 
     source = str(source)
@@ -46,7 +47,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     genderer = gender_detector(Path.cwd())
 
     # Load model
-    device = select_device("")
+    device = select_device(device)
     model = DetectMultiBackend(weights, device=device, dnn=False)
     stride, names, pt, jit, onnx = model.stride, model.names, model.pt, model.jit, model.onnx
     imgsz = check_img_size(640, s=stride)  # check image size
@@ -110,6 +111,7 @@ def parse_opt():
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
     parser.add_argument('--gen-det', type=bool, default=False, help='gender detection, default false')
     parser.add_argument('--age-det', type=bool, default=False, help='age detection, default false')
+    parser.add_argument('--device', type=str, default="", help='select either cpu or number of GPU, usually 0')
     opt = parser.parse_args()
     #opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(FILE.stem, opt)

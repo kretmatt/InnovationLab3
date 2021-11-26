@@ -3,7 +3,7 @@ import numpy as np
 
 class gender_detector:
     def __init__(self, root):
-        self.gender_model = cv2.dnn.readNetFromCaffe(str(root) + '/deploy_gender.prototxt', str(root) + '/gender_net.caffemodel')
+        self.gender_model = cv2.dnn.readNetFromCaffe(str(root) + '/gender_s.prototxt', str(root) + '/gender_s.caffemodel')
 
     def detect_gender(self, img_face):
         detected_face = cv2.resize(img_face, (227, 227)) #img shape is (224, 224, 3) now
