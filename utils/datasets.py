@@ -293,7 +293,7 @@ class LoadStreams:
 
         s = eval(s) if s.isnumeric() else s  # i.e. s = '0' local webcam
         cap = cv2.VideoCapture(s)
-        assert cap.isOpened(), f'{st}Failed to open {s}'
+        assert cap.isOpened(), f' Failed to open {s}'
         w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         self.fps[0] = max(cap.get(cv2.CAP_PROP_FPS) % 100, 0) #or 30.0  # 30 FPS fallback
