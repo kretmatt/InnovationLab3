@@ -1,7 +1,5 @@
 #TODO: GPU verwendung
 #TODO: Andere Gender Det. ausprobieren
-#TODO: quit button
-#TODO: Arguments für Gender/Age/None
 #TODO: Documentation
 
 
@@ -82,7 +80,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     label = f'Conf:{conf:.2f} '
 
                     if(age_det is True or gen_det is True):
-                        crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)] # Almost no impact on FPS counter
+                        crop_img = im0[(int(xyxy[1])):(int(xyxy[3])),(int(xyxy[0])):(int(xyxy[2]))] # Almost no impact on FPS counter
                         if(age_det is True):
                             #put age detection call here
                             continue
@@ -102,7 +100,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5s.pt', help='model path(s)')
-    parser.add_argument('--source', type=str, default=ROOT / 'data/images', help='file/dir/URL/glob, 0 for webcam')
+    parser.add_argument('--source', type=str, default='0', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
     parser.add_argument('--gen-det', type=bool, default=False, help='gender detection, default false')
