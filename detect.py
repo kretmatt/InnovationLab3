@@ -26,6 +26,7 @@ from utils.general import (LOGGER, check_file, check_img_size, check_imshow, che
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
 from utils.gendern import gender_detector
+from utils.age import age_detector
 
 
 @torch.no_grad()
@@ -40,6 +41,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
     source = str(source)
     webcam = source.isnumeric()
     genderer = gender_detector(Path.cwd())
+    age_modeler = age_detector(Path.cwd())
 
     # Load model
     device = select_device("")
@@ -82,8 +84,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     if(age_det is True or gen_det is True):
                         crop_img = im0[(int(xyxy[1])):(int(xyxy[3])),(int(xyxy[0])):(int(xyxy[2]))] # Almost no impact on FPS counter
                         if(age_det is True):
-                            #put age detection call here
-                            continue
+                            age = age_modeler.detect_age(crop_img)
+                            label += f' {age}'
                         if(gen_det is True):
                             gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
                             label += f' {gender} '
