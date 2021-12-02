@@ -1,7 +1,5 @@
 #TODO: GPU verwendung
 #TODO: Andere Gender Det. ausprobieren
-#TODO: quit button
-#TODO: Arguments für Gender/Age/None
 #TODO: Documentation
 
 
@@ -9,13 +7,11 @@ import argparse
 import os
 import sys
 import time
-from pathlib import Path
-
-
 import cv2
 import torch
 import numpy as np
 import torch.backends.cudnn as cudnn
+from pathlib import Path
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -30,25 +26,23 @@ from utils.general import (LOGGER, check_file, check_img_size, check_imshow, che
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
 from utils.gendern import gender_detector
-from utils.age import age_detector
+
 
 @torch.no_grad()
 def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
-        source=0,  # 0 for webcam
+        source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
         conf_thres=0.25,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
         gen_det=False,
         age_det=False,
-        device="",
         ):
 
     source = str(source)
     webcam = source.isnumeric()
     genderer = gender_detector(Path.cwd())
-    age_modeler = age_detector(Path.cwd())
 
     # Load model
-    device = select_device(device)
+    device = select_device("")
     model = DetectMultiBackend(weights, device=device, dnn=False)
     stride, names, pt, jit, onnx = model.stride, model.names, model.pt, model.jit, model.onnx
     imgsz = check_img_size(640, s=stride)  # check image size
@@ -86,17 +80,16 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                     label = f'Conf:{conf:.2f} '
 
                     if(age_det is True or gen_det is True):
-                        crop_img = im0[(int(xyxy[1])-10):(int(xyxy[3])-10),(int(xyxy[0])+10):(int(xyxy[2])+10)] # Almost no impact on FPS counter
+                        crop_img = im0[(int(xyxy[1])):(int(xyxy[3])),(int(xyxy[0])):(int(xyxy[2]))] # Almost no impact on FPS counter
                         if(age_det is True):
-                            age = age_modeler.detect_age(crop_img)
-                            label += f' {age} '
+                            #put age detection call here
+                            continue
                         if(gen_det is True):
                             gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
                             label += f' {gender} '
                     fps = 1/(time.time()-start_time)
                     label += f'FPS: {round(fps,2)}'
                     annotator.box_label(xyxy, label, color=colors(0, True))
-
             # Stream results
             im0 = annotator.result()
             #if view_img:
@@ -107,12 +100,11 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5s.pt', help='model path(s)')
-    parser.add_argument('--source', type=str, default=0 , help='file/dir/URL/glob, 0 for webcam')
+    parser.add_argument('--source', type=str, default='0', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
     parser.add_argument('--gen-det', type=bool, default=False, help='gender detection, default false')
     parser.add_argument('--age-det', type=bool, default=False, help='age detection, default false')
-    parser.add_argument('--device', type=str, default="", help='select either cpu or number of GPU, usually 0')
     opt = parser.parse_args()
     #opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(FILE.stem, opt)
