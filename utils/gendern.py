@@ -22,7 +22,7 @@ class gender_detector:
             #self.gender_model.setInput(img_blob)
             #gender_class = self.gender_model.forward()[0]
             #gender = 'Woman ' if np.argmax(gender_class) == 0 else 'Man'
-            #return gender
+            #return gender #
             return labels_dict[label]
         except Exception as e:
             print(str(e))
