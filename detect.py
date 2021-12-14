@@ -75,23 +75,22 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
             if len(det): #check if detection is not empty
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()
-
+                crop_ims = []
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
-                    #add text to label to display result
-                    label = f'Conf:{conf:.2f} '
-
                     if(age_det is True or gen_det is True):
                         crop_img = im0[(int(xyxy[1])):(int(xyxy[3])),(int(xyxy[0])):(int(xyxy[2]))] # Almost no impact on FPS counter
-                        if(age_det is True):
-                            age = age_modeler.detect_age(crop_img)
-                            label += f' {age}'
-                        if(gen_det is True):
-                            gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
-                            label += f' {gender} '
-                    fps = 1/(time.time()-start_time)
-                    label += f'FPS: {round(fps,2)}'
-                    annotator.box_label(xyxy, label, color=colors(0, True))
+                        crop_ims.append([xyxy, crop_img])
+                        #if(age_det is True):
+                        #    age = age_modeler.detect_age(crop_img)
+                        #    label += f' {age}'
+                        #if(gen_det is True):
+                        #    gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
+                        #    label += f' {gender} '
+                genderer.pass_detections(crop_ims.copy())
+                gres = genderer.results.copy()
+                for res in gres:
+                    annotator.box_label(res[0], res[2], color=colors(0, True))
             # Stream results
             im0 = annotator.result()
             #if view_img:
