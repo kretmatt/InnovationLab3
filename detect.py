@@ -77,7 +77,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
             annotator = Annotator(im0, line_width=3, example=str(names))
             if len(det): #check if detection is not empty
                 # Rescale boxes from img_size to im0 size
-                det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round() * np.array([1,1,.9,.9]) # resize box to face # Todo: find a better way to do this, causes more undetectable of objects
+                det[:, :4] = scale_coords(im.shape[2:], det[:, :4], im0.shape).round()#* np.array([1,1,.9,.9])#resize box to face # Todo: find a better way to do this, causes more undetectable of objects
                 #bounding_box = det[:, :4] * np.array([origin_w, origin_h, origin_w, origin_h])
                 #x_start, y_start, x_end, y_end = bounding_box.int()
 
@@ -100,7 +100,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                         if(gen_det is True):
                             gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
                             #label += f'Gender: {gender}'
-                            label += f', {gender}'
+                            label += f'{gender}'
                             # color changer 
                             if(gender  == "Male"):
                                 #print(gender)
@@ -111,15 +111,15 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                             else:
                                 #print("nothing detected")
                                 box_col = 8
-                    # combine fps and conf 
-                    fps = 1/(time.time()-start_time)
-                    fps_conf_ctnr = f'Conf:{conf:.2f} '
-                    fps_conf_ctnr += f'FPS: {round(fps,2)}'
-                    cv2.putText(im0, fps_conf_ctnr, (15, 30), cv2.FONT_HERSHEY_SIMPLEX, .75, (255, 255, 255), 2) # put fps counter on the top left corner
+
                     #print(xyxy)
                     annotator.box_label(xyxy, label, color = colors(box_col, True))
 
             # Stream results
+            # combine fps and conf
+            fps = 1 / (time.time() - start_time)
+            fps_conf_ctnr = f'FPS:{fps:.2f} '
+            cv2.putText(im0, fps_conf_ctnr, (15, 30), cv2.FONT_HERSHEY_SIMPLEX, .75, (255, 255, 255),2)  # put fps counter on the top left corner
             im0 = annotator.result()
             #if view_img:
             #fps_ctnr = f'FPS: {round(fps,2)}'
