@@ -18,7 +18,8 @@ class gender_detector:
 
     def detect_gender(self):
         labels_dict = {0: 'Male', 1: 'Female'}
-        print("asd")
+        print("starting gender thread")
+        time.sleep(10)
         while True:
             try:
                 newdets = []
@@ -33,3 +34,5 @@ class gender_detector:
                 self.results = newdets
             except Exception as e:
                 print(str(e))
+            print("looping")
+            time.sleep(1/60)
