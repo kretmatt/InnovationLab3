@@ -1,5 +1,3 @@
-#TODO: GPU verwendung
-#TODO: Andere Gender Det. ausprobieren
 #TODO: Documentation
 
 
