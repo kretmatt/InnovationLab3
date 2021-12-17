@@ -24,10 +24,10 @@ class gender_detector:
             try:
                 newdets = []
                 for img in self.images:
-                    gray = cv2.cvtColor(img[1], cv2.COLOR_BGR2GRAY)
-                    resized = cv2.resize(gray, (32, 32))
-                    normalized = resized/255.0
-                    reshaped = np.reshape(normalized, (1, 32, 32, 1))
+                    #gray = cv2.cvtColor(img[1], cv2.COLOR_BGR2GRAY)
+                    resized = cv2.resize(img[1], (178, 218))
+                    #normalized = resized/255.0
+                    reshaped = np.reshape(resized, (1, 178, 218, 3))
                     result = self.gender_modelK.predict(reshaped)
                     label = np.argmax(result, axis=1)[0]
                     newdets.append([img[0], img[1], labels_dict[label]])
