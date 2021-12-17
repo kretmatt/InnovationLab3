@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import keras
 import tensorflow as tf
 import threading
 import time
