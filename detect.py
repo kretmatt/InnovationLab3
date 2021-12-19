@@ -88,7 +88,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 genderer.pass_detections(crop_ims.copy())
                 gres = genderer.results.copy()
                 for res in gres:
-                    annotator.box_label(res[0], res[2], color=colors(0, True))
+                    boxtext = res[2] + " " + res[3]
+                    annotator.box_label(res[0], boxtext, color=colors(0, True))
             # Stream results
             im0 = annotator.result()
             #if view_img:
