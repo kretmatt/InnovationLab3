@@ -79,20 +79,39 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
                     #add text to label to display result
-                    label = f'Conf:{conf:.2f} '
-
+                    label = ''
+                    box_col = 8 # default color
                     if(age_det is True or gen_det is True):
                         crop_img = im0[(int(xyxy[1])):(int(xyxy[3])),(int(xyxy[0])):(int(xyxy[2]))] # Almost no impact on FPS counter
+                        #age detection code
                         if(age_det is True):
                             age = age_modeler.detect_age(crop_img)
-                            label += f' {age}'
+                            #label += f'Age: {age} '
+                            label += f'{age}'
+                        # gender detection codeq
                         if(gen_det is True):
                             gender = genderer.detect_gender(crop_img) # Significant FPS drop (Matthias: around 3 FPS)
-                            label += f' {gender} '
-                    fps = 1/(time.time()-start_time)
-                    label += f'FPS: {round(fps,2)}'
-                    annotator.box_label(xyxy, label, color=colors(0, True))
+                            #label += f'Gender: {gender}'
+                            label += f'{gender}'
+                            # color changer 
+                            if(gender  == "Male"):
+                                #print(gender)
+                                box_col = 0
+                            elif(gender == "Female"):
+                                #print(gender)
+                                box_col = 4
+                            else:
+                                #print("nothing detected")
+                                box_col = 8
+
+                    #print(xyxy)
+                    annotator.box_label(xyxy, label, color = colors(box_col, True))
+
             # Stream results
+            # combine fps and conf
+            fps = 1 / (time.time() - start_time)
+            fps_conf_ctnr = f'FPS:{fps:.2f} '
+            cv2.putText(im0, fps_conf_ctnr, (15, 30), cv2.FONT_HERSHEY_SIMPLEX, .75, (255, 255, 255),2)  # put fps counter on the top left corner
             im0 = annotator.result()
             #if view_img:
             cv2.imshow(str(p), im0)
