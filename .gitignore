@@ -1,3 +1,4 @@
 /*.caffemodel
-/gender_model.h5
-/model_gender.h5
+models/gender_model.h5
+models/model_gender.h5
+models/face_detection_yolov5s.pt
