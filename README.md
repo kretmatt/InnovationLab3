@@ -1,5 +1,6 @@
 # InnovationLab3
 
+This program is a Face/Gender/Age detector based on Yolov5. The Gender detection is based on the CelebA Dataset and the Age Detection is based on the Adience Dataset.
 Tested and written on python 3.8.10
 
 ## Installation:
