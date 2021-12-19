@@ -79,9 +79,23 @@ def run(weights=ROOT / 'models/face_detection_yolov5s.pt',  # model.pt path(s)
                 predictor.pass_detections(crop_ims.copy())
                 pres = predictor.results.copy()
                 for res in pres:
+                    box_col = 8 # default color
                     boxtext = res[2] + " " + res[3]
-                    annotator.box_label(res[0], boxtext, color=colors(0, True))
+                    if(res[2]  == "Male"):
+                        #print(gender)
+                        box_col = 0
+                    elif(res[2] == "Female"):
+                        #print(gender)
+                        box_col = 4
+                    else:
+                        #print("nothing detected")
+                        box_col = 8
+                    annotator.box_label(res[0], boxtext, color=colors(box_col, True))
             # Stream results
+            # combine fps and conf
+            fps = 1 / (time.time() - start_time)
+            fps_conf_ctnr = f'FPS:{fps:.2f} '
+            cv2.putText(im0, fps_conf_ctnr, (15, 30), cv2.FONT_HERSHEY_SIMPLEX, .75, (255, 255, 255),2)  # put fps counter on the top left corner
             im0 = annotator.result()
             #if view_img:
             cv2.imshow(str(p), im0)
