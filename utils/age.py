@@ -4,9 +4,8 @@ import tensorflow as tf
 
 class age_detector:
 
-    def __init__(self, root):
-        #self.age_model = cv2.dnn.readNetFromCaffe(str(root) + '/deploy_age.prototxt', str(root) + '/age_net.caffemodel')
-        self.age_model = tf.keras.models.load_model('age_model.h5')
+    def __init__(self):
+        self.age_model = tf.keras.models.load_model('models/age_model.h5')
         self.label_to_age_map = {
             0: '0-2',
             1: '4-6',
