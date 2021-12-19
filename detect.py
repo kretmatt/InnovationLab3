@@ -28,12 +28,12 @@ from utils.age import age_detector
 
 
 @torch.no_grad()
-def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
+def run(weights=ROOT / 'face_detection_yolov5s.pt',  # model.pt path(s)
         source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
         conf_thres=0.25,  # confidence threshold
         iou_thres=0.45,  # NMS IOU threshold
-        gen_det=False,
-        age_det=False,
+        gen_det=True,
+        age_det=True,
         ):
 
     source = str(source)
