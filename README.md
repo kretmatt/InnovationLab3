@@ -13,7 +13,7 @@ Gender Detection Model: [Drive Link](https://drive.google.com/file/d/1H8UzJURLl6
 
 Face Detection Model: [Drive Link](https://drive.google.com/file/d/1L9CubLbwRkUPFh4rh9KnTeoSNKFrcNeO/view?usp=sharing)
 
-Age Detection Model: [Drive Link](https://drive.google.com/u/0/uc?id=1kiusFljZc9QfcIYdU2s7xrtWHTraHwmW&export=download)
+Age Detection Model: [Drive Link](https://drive.google.com/file/d/1p3vxO-FtOwe-I_LECCB6CJuRzGp-EVv7/view?usp=sharing)
 
 ## Execution:
 
