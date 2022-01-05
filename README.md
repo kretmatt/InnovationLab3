@@ -9,11 +9,11 @@ Tested and written on python 3.8.10
 
 Add the following files to the Models folder:
 
-Gender Detection Model: [Drive Link](https://drive.google.com/file/d/1H8UzJURLl69GGZC9ZA9zZ1DSbCFP-55I/view?usp=sharing)
+Gender Detection Model: [Drive Link](https://drive.google.com/uc?id=1H8UzJURLl69GGZC9ZA9zZ1DSbCFP-55I&export=download)
 
-Face Detection Model: [Drive Link](https://drive.google.com/file/d/1L9CubLbwRkUPFh4rh9KnTeoSNKFrcNeO/view?usp=sharing)
+Face Detection Model: [Drive Link](https://drive.google.com/uc?id=1L9CubLbwRkUPFh4rh9KnTeoSNKFrcNeO&export=download)
 
-Age Detection Model: [Drive Link](https://drive.google.com/file/d/1p3vxO-FtOwe-I_LECCB6CJuRzGp-EVv7/view?usp=sharing)
+Age Detection Model: [Drive Link](https://drive.google.com/uc?id=1p3vxO-FtOwe-I_LECCB6CJuRzGp-EVv7&export=download)
 
 ## Execution:
 
