@@ -1,21 +1,29 @@
 import cv2
 import numpy as np
 import tensorflow as tf
-import keras
 
 
 class gender_detector:
     def __init__(self):
-        self.gender_modelK = tf.keras.models.load_model('models/gender_model.h5')
+        self.gender_modelK = tf.keras.models.load_model('models/gender_model_new.h5')
         self.labels_dict = {0: 'Male', 1: 'Female'}
 
     def detect_gender(self, img_face):
         try:
             # Gender Detection
-            resized = cv2.resize(img_face, (178, 218))
-            reshaped = np.reshape(resized, (1, 178, 218, 3))
+            gray = cv2.cvtColor(img_face, cv2.COLOR_BGR2GRAY)
+            resized = cv2.resize(gray, (64, 64))
+            resized = resized/255
+            reshaped = np.reshape(resized, (1, 64, 64, 1))
+
+
             result = self.gender_modelK.predict(reshaped)
-            label = np.argmax(result, axis=1)[0]
-            return self.labels_dict[label];
+            #old code below
+            #label = np.argmax(result[1], axis=1)[0]
+            #return self.labels_dict[label];
+            if(result[1] < 0.5):
+                return 'Male'
+            else:
+                return 'Female'
         except Exception as e:
             print(str(e))
