@@ -80,7 +80,7 @@ def run(weights=ROOT / 'models/face_detection_yolov5s.pt',  # model.pt path(s)
                 pres = predictor.results.copy()
                 for res in pres:
                     box_col = 8 # default color
-                    boxtext = res[2] + " " + res[3]
+                    boxtext = res[2] + " " + res[3] + " " + res[4]
                     if(res[2]  == "Male"):
                         #print(gender)
                         box_col = 0
