@@ -2,6 +2,7 @@
 
 
 import argparse
+from logging import root
 import os
 import sys
 import time
@@ -10,6 +11,11 @@ import torch
 import numpy as np
 import torch.backends.cudnn as cudnn
 from pathlib import Path
+# libraries for tkinter
+import tkinter as tk
+from tkinter.constants import LEFT, RIGHT
+import PIL.Image, PIL.ImageTk
+
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -24,7 +30,21 @@ from utils.general import (LOGGER, check_file, check_img_size, check_imshow, che
 from utils.plots import Annotator, colors, save_one_box
 from utils.torch_utils import select_device, time_sync
 from utils.prediction import prediction
+from utils.detection import detection
 
+class App:
+    def __init__(self, window, window_title, video_source):
+        self.window = window
+        self.window.title(window_title)
+        self.video_source = video_source
+
+        detector = detection()
+
+        self.video = detector.current_img
+        
+
+        self.window.mainloop()
+        
 
 @torch.no_grad()
 def run(weights=ROOT / 'models/face_detection_yolov5s.pt',  # model.pt path(s)
@@ -35,9 +55,11 @@ def run(weights=ROOT / 'models/face_detection_yolov5s.pt',  # model.pt path(s)
         age_det=False,
         ):
 
+    window_name = "INN3 Python Detector"
     source = str(source)
     webcam = source.isnumeric()
     predictor = prediction(gen_det,age_det)
+    #detector = detection()
 
     # Load model
     device = select_device("")
@@ -98,8 +120,14 @@ def run(weights=ROOT / 'models/face_detection_yolov5s.pt',  # model.pt path(s)
             cv2.putText(im0, fps_conf_ctnr, (15, 30), cv2.FONT_HERSHEY_SIMPLEX, .75, (255, 255, 255),2)  # put fps counter on the top left corner
             im0 = annotator.result()
             #if view_img:
-            cv2.imshow(str(p), im0)
+
+            #current_image = cv2.imshow(str(p), im0)
+            # fullscreen the window => causes fps drop
+            cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)          
+            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+            current_image = cv2.imshow(window_name, im0)
             cv2.waitKey(1)  # 1 millisecond
+    
 
 
 def parse_opt():
@@ -111,6 +139,7 @@ def parse_opt():
     parser.add_argument('--gen_det', type=bool, default=False, help='gender detection, default false')
     parser.add_argument('--age_det', type=bool, default=False, help='age detection, default false')
     opt = parser.parse_args()
+
     #opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(FILE.stem, opt)
     return opt
@@ -119,6 +148,7 @@ def parse_opt():
 def main(opt):
     check_requirements(exclude=('tensorboard', 'thop'))
     print(vars(opt))
+    #App(tkinter.Tk(), "INN3 Python Detector")
     run(**vars(opt))
 
 
