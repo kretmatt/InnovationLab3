@@ -52,7 +52,7 @@ class App:
         self.idet.start_pred()
         self.idet.start_threads()
         time.sleep(1)
-        self.delay = 60
+        self.delay = 1
         self.update()
         self.rootWindow.mainloop()
 

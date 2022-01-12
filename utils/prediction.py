@@ -44,4 +44,4 @@ class prediction:
                 self.results = newdets
             except Exception as e:
                 print(str(e))
-            #time.sleep(1/10)
+            time.sleep(1/10)
