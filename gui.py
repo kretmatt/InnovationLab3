@@ -2,7 +2,7 @@
 ### https://codingshiksha.com/python/python-3-tkinter-webcam-video-recorder-selfie-capture-as-png-image-using-opencv-pillow-library-gui-desktop-app-full-project-for-beginners/
 
 import tkinter as tk
-from tkinter.constants import LEFT, RIGHT
+from tkinter.constants import LEFT, RIGHT, BOTH, YES
 import PIL.Image, PIL.ImageTk
 import os
 import cv2
@@ -25,8 +25,8 @@ class App:
     def __init__(self, rootWindow, windowTitle, videoSource = 0):
         self.rootWindow = rootWindow
         self.rootWindow.attributes('-fullscreen',True)
-        print(self.rootWindow.winfo_reqheight())
-        print(self.rootWindow.winfo_reqwidth())
+        print(self.rootWindow.winfo_height())
+        print(self.rootWindow.winfo_width())
         self.rootWindow.title(windowTitle)
         self.videoSource = videoSource
         self.ok = False
@@ -36,11 +36,9 @@ class App:
         self.gender = False
 
         # open ghe video source for testing
-        #self.video = VideoCapture(self.videoSource)
         # create canvas for video source
-        self.tkCanvas = tk.Canvas(rootWindow, width = , height = 480)
-        self.tkCanvas.pack()
-
+        self.tkCanvas = tk.Canvas(rootWindow, width = 620, height = 480)
+        self.tkCanvas.pack(fill=BOTH, expand=YES)
 
         # add Buttons to the window
         self.btnAge = tk.Button(rootWindow, text='Age Detection', fg = "black", width = 15, command = self.ageDetection)
@@ -110,9 +108,10 @@ class App:
         frame = self.idet.get_currentpic()
         if frame.size != 0:
             frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+            frame = image_resize(frame, height=self.tkCanvas.winfo_height())
             im = PIL.Image.fromarray(frame)
             self.photo = PIL.ImageTk.PhotoImage(im)
-            self.tkCanvas.create_image(0, 0, image = self.photo, anchor = tk.NW)
+            self.tkCanvas.create_image(self.tkCanvas.winfo_width()/2, self.tkCanvas.winfo_height()/2, image = self.photo, anchor = tk.CENTER)
         self.rootWindow.after(self.delay,self.update)
 
 class VideoCapture:
@@ -199,6 +198,38 @@ class CommandLineParser:
         # Parse the arguments and get all the values in the form of namespace.
         # Here args is of namespace and values will be accessed through tag names
         self.args = parser.parse_args()
+
+def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv2.resize(image, dim, interpolation = inter)
+
+    # return the resized image
+    return resized
+
 
 def main():
     App(tk.Tk(), 'InnoLab Python Detector')
