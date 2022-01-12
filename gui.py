@@ -24,6 +24,9 @@ from detect import inn3_detector
 class App:
     def __init__(self, rootWindow, windowTitle, videoSource = 0):
         self.rootWindow = rootWindow
+        self.rootWindow.attributes('-fullscreen',True)
+        print(self.rootWindow.winfo_reqheight())
+        print(self.rootWindow.winfo_reqwidth())
         self.rootWindow.title(windowTitle)
         self.videoSource = videoSource
         self.ok = False
@@ -35,7 +38,7 @@ class App:
         # open ghe video source for testing
         #self.video = VideoCapture(self.videoSource)
         # create canvas for video source
-        self.tkCanvas = tk.Canvas(rootWindow, width = 620, height = 480)
+        self.tkCanvas = tk.Canvas(rootWindow, width = , height = 480)
         self.tkCanvas.pack()
 
 
