@@ -15,7 +15,14 @@ Face Detection Model: [Drive Link](https://drive.google.com/uc?id=1L9CubLbwRkUPF
 
 Age Detection Model: [Drive Link](https://drive.google.com/uc?id=1p3vxO-FtOwe-I_LECCB6CJuRzGp-EVv7&export=download)
 
-## Execution:
+## Execution with UI:
+
+to run the program:
+
+```python gui.py```
+
+
+## Execution without UI:
 
 to run the program:
 
